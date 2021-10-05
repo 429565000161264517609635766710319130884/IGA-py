@@ -1,19 +1,21 @@
 import re
 import json
 import typing
+import urllib.parse
 import urllib3
+urllib3.disable_warnings()
 
 
 MAGIC_USER_AGENT = "Mozilla/5.0 (Linux; Android 9; SM-A102U Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile Safari/537.36 Instagram 155.0.0.37.107 Android (28/9; 320dpi; 720x1468; samsung; SM-A102U; a10e; exynos7885; en_US; 239490550)"
 
 
 class Queries:
-    def __init__(self, queries: typing.List[str], query_id: str):
-        self.FEED: str = queries[0]
-        self.SUL: str = queries[1]
-        self.MYSELF: str = queries[2]
-        self.USER: str = queries[3]
-        self.QUERY_ID: str = query_id
+    def __init__(self):
+        self.FEED: str
+        self.SUL: str
+        self.MYSELF: str
+        self.USER: str
+        self.QUERY_ID: str
 
 
 class User:
@@ -90,17 +92,23 @@ class InstagramRatelimitError(Exception):
     pass
 
 
+class InstagramInvalidUserError(Exception):
+    pass
+
+
 def handle_json(request: dict) -> dict:
     try:
         return json.loads(request["text"])
-    except:
-        raise InstagramRatelimitError("You're being rate limited by Instagram for this route ! Please, try again in a hour.")
+    except json.decoder.JSONDecodeError:
+        raise InstagramRatelimitError(
+            "You're being rate limited by Instagram for this route ! Please, try again in a hour.")
+
 
 def fetch_csrf_token() -> str:
     request = __http_get("https://instagram.com/")
     shared_data = re.search(
         r"<script type=\"text/javascript\">window._sharedData = (.*);</script>", request["text"]).group(1)
-    data = handle_json(shared_data)
+    data = json.loads(shared_data)
     csrf_token = data["config"]["csrf_token"]
     return csrf_token
 
@@ -114,10 +122,16 @@ def fetch_queries_hash(csrf_token: str) -> Queries:
     queries = re.findall(r"\w+=\"[a-f0-9]{32}\"", script["text"])
     query_id = re.search(r"queryId:\"([a-f0-9]+)\"", script["text"]).group(1)
 
+    o = Queries()
     for i in range(len(queries)):
         queries[i] = re.search(r"\"([a-f0-9]{32})\"", queries[i]).group(1)
 
-    return Queries(queries, query_id)
+    o.FEED = queries[0]
+    o.SUL = queries[1]
+    o.MYSELF = queries[2]
+    o.USER = queries[3]
+    o.QUERY_ID = query_id
+    return o
 
 
 def fetch_homepage_content_properties(short_code: str, csrf_token: str) -> dict:
@@ -140,7 +154,9 @@ def fetch_homepage_content(query_id: str, profile_id: str, csrf_token: str, firs
 
 def perform_graphql(query_hash: str, variables: dict, csrf_token: str) -> dict:
     url = "https://www.instagram.com/graphql/query/?query_hash=" + \
-        query_hash + "&variables=" + json.dumps(variables)
+        query_hash + "&variables=" + \
+        urllib.parse.quote(json.dumps(variables).replace(' ', '').strip())
+
     request = __http_get(url, headers=dict(
         cookie="csrftoken=" + csrf_token + ";"))
     return handle_json(request)
@@ -174,13 +190,18 @@ def fetch_user_feed(query_hash: str, user_id: str, csrf_token: str) -> UserFeed:
         include_suggested_users=True,
         include_logged_out_extras=True,
         include_highlight_reels=True,
-        include_live_status=True
+        include_live_status=True,
+        has_threaded_comments=True
     )
 
     response = perform_graphql(query_hash, dict(
         user_id=user_id, **intents), csrf_token)
     data = response["data"]
     feed = data["user"]
+
+    if feed is None:
+        raise InstagramInvalidUserError(
+            "The entered user ID was not found ! (%s)" % (user_id))
     reel = None
     highlights = None
 
@@ -199,5 +220,5 @@ def fetch_user_feed(query_hash: str, user_id: str, csrf_token: str) -> UserFeed:
             highlights[i] = highlight
 
     result = UserFeed(reel, highlights,
-                      feed["has_public_story"], feed["is_live"])
+                      feed["has_public_story"] if "has_public_story" in feed.keys() else False, feed["is_live"] if "is_live" in feed.keys() else False)
     return result
