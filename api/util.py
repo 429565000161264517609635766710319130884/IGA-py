@@ -5,7 +5,7 @@ import urllib3
 
 
 urllib3.disable_warnings()
-MAGIC_USER_AGENT = "Mozilla/5.0 (Linux; Android 9; SM-A102U Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile Safari/537.36 Instagram 155.0.0.37.107 Android (28/9; 320dpi; 720x1468; samsung; SM-A102U; a10e; exynos7885; en_US; 239490550)"
+MAGIC_USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1"
 
 
 class Queries:
@@ -29,8 +29,11 @@ def http_get(url: str, headers: dict = None):
             headers["user-agent"] = MAGIC_USER_AGENT
 
     response = http.request("GET", url, headers=headers)
+
     content = response.__dict__.get("_body")
-    return dict(text=content.decode("utf-8", "ignore"), content=content)
+    text = content.decode("utf-8", "ignore")
+
+    return dict(text=text, content=content)
 
 
 def handle_json(request: dict) -> dict:

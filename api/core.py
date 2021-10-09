@@ -4,7 +4,6 @@ import api.util as util
 import api.errors as errors
 
 
-
 IG_URL = "https://www.instagram.com"
 
 
@@ -22,8 +21,9 @@ def fetch_queries_hash(csrf_token: str) -> util.Queries:
     """ Returns a ``Queries`` object which contains many key. These are about ``query_hash`` variable in GraphQL requests where each of them points to different endpoint. """
     request = util.http_get(IG_URL + "/account/login",
                             headers=dict(cookie="csrftoken=" + csrf_token + ";"))
+
     script_id = re.search(
-        r"static/bundles/metro/ConsumerLibCommons.js/[a-f0-9]+.js", request["text"]).group(0)
+        r"static/bundles/(metro|es6)/ConsumerLibCommons.js/[a-f0-9]+.js", request["text"]).group(0)
     script = util.http_get(IG_URL + '/' + script_id)
     queries = re.findall(r"\w+=\"[a-f0-9]{32}\"", script["text"])
     query_id = re.search(r"queryId:\"([a-f0-9]+)\"", script["text"]).group(1)
@@ -60,11 +60,9 @@ def fetch_home_feed_properties_from(short_code: str, csrf_token: str) -> dict:
     return data
 
 
-def fetch_user(username: str, csrf_token: str) -> dict:
+def fetch_user(username: str) -> dict:
     """ Returns a JSON object which includes pretty all public informations extracted from a profile. """
-    url = IG_URL + "/" + username + "/?__a=1"
-    request = util.http_get(url, headers=dict(
-        cookie="csrftoken=" + csrf_token + ";"))
+    request = util.http_get(IG_URL + "/" + username + "/channel/?__a=1")
     data = util.handle_json(request)
     return data
 

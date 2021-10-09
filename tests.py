@@ -10,11 +10,14 @@ def write_output(output_name: str, data: dict):
 
 
 def main():
-    csrf_token = api.core.fetch_csrf_token()
-
-    # THE USER DICT OBJECT CAN BE SEE IN outputs/user.sample.json
-    data = api.core.fetch_user("drake", csrf_token)
+    data = api.core.fetch_user("lanarhoades")
     profile = data["graphql"]["user"]
-    print("Username : %s\nBiography : %s" % (profile["username"], profile["biography"]))
 
-main()
+    # All ``profile`` dict keys and values are showcased in outputs/user.sample.json
+    print("Username : " + profile["username"])
+    print("Biography : " + profile["biography"])
+    print("Followed by %d people, following %d people." % (profile["edge_followed_by"]["count"], profile["edge_follow"]["count"]))
+
+
+if __name__ == "__main__":
+    main()

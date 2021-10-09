@@ -5,13 +5,18 @@ This API is unofficial. It allows you to interact with many things that your bro
 ```python
 import api.core
 
+
 def main():
-    csrf_token = api.core.fetch_csrf_token()
+    data = api.core.fetch_user("lanarhoades")
+    profile = data["graphql"]["user"]
 
-    user = api.core.fetch_user("drake", csrf_token)
+    # All ``profile`` dict keys and values are showcased in outputs/user.sample.json
+    print("Username : " + profile["username"])
+    print("Biography : " + profile["biography"])
+    print("Followed by %d people, following %d people." % (profile["edge_followed_by"]["count"], profile["edge_follow"]["count"]))
 
-    print("The user %s follows %d people and is followed by %d people. It's biography is : %s" % (user.username, user.following_count, user.followers_count, user.biography))
 
+if __name__ == "__main__":
+    main()
 
-main()
 ```
