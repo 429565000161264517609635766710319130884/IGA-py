@@ -17,10 +17,9 @@ def fetch_csrf_token() -> str:
     return csrf_token
 
 
-def fetch_queries_hash(csrf_token: str) -> util.Queries:
+def fetch_queries_hash() -> util.Queries:
     """ Returns a ``Queries`` object which contains many key. These are about ``query_hash`` variable in GraphQL requests where each of them points to different endpoint. """
-    request = util.http_get(IG_URL + "/account/login",
-                            headers=dict(cookie="csrftoken=" + csrf_token + ";"))
+    request = util.http_get(IG_URL + "/account/login")
 
     script_id = re.search(
         r"static/bundles/(metro|es6)/ConsumerLibCommons.js/[a-f0-9]+.js", request["text"]).group(0)
@@ -40,14 +39,13 @@ def fetch_queries_hash(csrf_token: str) -> util.Queries:
     return o
 
 
-def fetch_home_feed(query_id: str, profile_id: str, csrf_token: str, first: int = 12, after: str = None) -> dict:
+def fetch_home_feed(query_id: str, profile_id: str, first: int = 12, after: str = None) -> dict:
     """ Returns a JSON object which includes the first ``first`` posts after the ``after (or None)`` posts. """
     url = IG_URL + "/graphql/query/?query_hash=" + query_id + "&variables=" + \
         json.dumps(dict(id=profile_id, first=first,
                    after=after if after is not None else ""))
 
-    request = util.http_get(url, headers=dict(
-        cookie="csrftoken=" + csrf_token + ";"))
+    request = util.http_get(url)
     data = util.handle_json(request)
     return data
 
