@@ -14,10 +14,11 @@ def write_output(output_name: str, data: dict):
 
 
 def getLanaRhoadesUser():
+    """ All ``profile`` dict keys and values are showcased in ``types/user.json`` """
+
     data = api.core.fetch_user("lanarhoades")
     profile = data["graphql"]["user"]
 
-    # All ``profile`` dict keys and values are showcased in ``types/user.json``
     print("Username : " + profile["username"])
     print("Biography : " + profile["biography"])
     print("Followed by %d people, following %d people." % (profile["edge_followed_by"]["count"], profile["edge_follow"]["count"]))
@@ -65,6 +66,7 @@ def getLanaRhoadesStories():
 
     data = api.core.fetch_user_stories(QUERIES.USER, "3312648204")
     stories = data["data"]["user"]["edge_highlight_reels"]["edges"]
+
     print("This user has %d saved / highlighted stories" % (len(stories)))
     for story in stories:
         print("- " + story["node"]["title"])

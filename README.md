@@ -11,10 +11,10 @@ QUERIES = api.core.fetch_queries_hash()
 
 
 def getLanaRhoadesUser():
+    """ All ``profile`` dict keys and values are showcased in ``types/user.json`` """
     data = api.core.fetch_user("lanarhoades")
     profile = data["graphql"]["user"]
 
-    # All ``profile`` dict keys and values are showcased in ``types/user.json``
     print("Username : " + profile["username"])
     print("Biography : " + profile["biography"])
     print("Followed by %d people, following %d people." % (profile["edge_followed_by"]["count"], profile["edge_follow"]["count"]))
