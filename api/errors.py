@@ -3,3 +3,6 @@ class InvalidUserError(Exception):
 
 class RateLimitError(Exception):
     pass
+
+class LoginRedirectionError(Exception):
+    pass

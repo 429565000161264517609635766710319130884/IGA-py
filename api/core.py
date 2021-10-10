@@ -8,7 +8,10 @@ IG_URL = "https://www.instagram.com"
 
 
 def fetch_queries_hash() -> util.Queries:
-    """ Returns a ``Queries`` object which contains many key. These are about ``query_hash`` variable in GraphQL requests where each of them points to different endpoint. """
+    """
+    Returns a ``Queries`` object which contains many string keys to interact with the GraphQL API.
+    """
+
     request = util.http_get(IG_URL + "/account/login")
 
     script_id = re.search(
@@ -21,41 +24,34 @@ def fetch_queries_hash() -> util.Queries:
     for i in range(len(queries)):
         queries[i] = re.search(r"\"([a-f0-9]{32})\"", queries[i]).group(1)
 
-    o.FEED = queries[0]
-    o.SUL = queries[1]
-    o.MYSELF = queries[2]
     o.USER = queries[3]
     o.QUERY_ID = query_id
+
     return o
 
 
-def fetch_user_posts(query_id: str, profile_id: str, first: int = 12, after: str = None) -> dict:
-    """ Returns a JSON object which includes the first ``first`` posts after the ``after (or None)`` posts. """
-    url = IG_URL + "/graphql/query/?query_hash=" + query_id + "&variables=" + \
-        json.dumps(dict(id=profile_id, first=first,
-                   after=after if after is not None else ""))
-
-    request = util.http_get(url)
-    data = util.handle_json(request)
-    return data
-
-
-def fetch_post_properties(short_code: str) -> dict:
-    """ Returns a JSON object which includes all informations about a post from it's ``short_code``. """
-    request = util.http_get(IG_URL + "/p/" + short_code + "/?__a=1")
-    data = util.handle_json(request)
-    return data
-
-
 def fetch_user(username: str) -> dict:
-    """ Returns a JSON object which includes pretty all public informations extracted from a profile. """
+    """
+    :Params:
+    ``username`` : str
+
+    Returns a JSON object of type ``types/users/user.json``.
+    """
+
     request = util.http_get(IG_URL + "/" + username + "/channel/?__a=1")
     data = util.handle_json(request)
     return data
 
 
 def fetch_user_stories(query_hash: str, user_id: str) -> dict:
-    """ Returns a JSON object which includes the highlight and the current (if exists) stories from a profile. """
+    """
+    :Params:
+    ``query_hash`` : Queries.USER (str)
+    ``user_id`` : str
+
+    Returns a JSON object of type ``types/users/stories.json``.
+    """
+
     intents = dict(
         include_chaining=True,
         include_reel=True,
@@ -76,3 +72,36 @@ def fetch_user_stories(query_hash: str, user_id: str) -> dict:
             "The content for the entered user ID was not found ! (%s)" % (user_id))
 
     return response
+
+
+def fetch_user_posts(query_hash: str, profile_id: str, first: int = 12, after: str = '') -> dict:
+    """
+    :Params:
+    ``query_hash`` : Queries.QUERY_ID (str)
+    ``profile_id`` : str
+    ``first`` : int (default set to 12)
+    ``after`` : str (default set as empty)
+
+    Returns a JSON object of type ``types/posts/posts.json``.
+    """
+
+    url = IG_URL + "/graphql/query/?query_hash=" + query_hash + "&variables=" + \
+        json.dumps(dict(id=profile_id, first=first,
+                   after=after if after is not None else ""))
+
+    request = util.http_get(url)
+    data = util.handle_json(request)
+    return data
+
+
+def fetch_post_properties(short_code: str) -> dict:
+    """
+    :Params:
+    ``short_code``: str
+
+    Returns a JSON object of type ``types/posts/post_properties.json``.
+    """
+
+    request = util.http_get(IG_URL + "/p/" + short_code + "/?__a=1")
+    data = util.handle_json(request)
+    return data
