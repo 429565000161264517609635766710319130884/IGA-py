@@ -44,11 +44,10 @@ def handle_json(request: dict) -> dict:
             "You are being rate limited by Instagram for this route ! Please, try again in a hour.")
 
 
-def perform_graphql(query_hash: str, variables: dict, csrf_token: str) -> dict:
+def perform_graphql(query_hash: str, variables: dict) -> dict:
     url = "https://www.instagram.com/graphql/query/?query_hash=" + \
         query_hash + "&variables=" + \
         urllib.parse.quote(json.dumps(variables).replace(' ', '').strip())
 
-    request = http_get(url, headers=dict(
-        cookie="csrftoken=" + csrf_token + ";"))
+    request = http_get(url)
     return handle_json(request)

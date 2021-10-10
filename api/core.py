@@ -7,16 +7,6 @@ import api.errors as errors
 IG_URL = "https://www.instagram.com"
 
 
-def fetch_csrf_token() -> str:
-    """ Returns a string containing a CSRF token generated from Instagram allowing the script to access public information from the API. It's required to go futher. """
-    request = util.http_get(IG_URL)
-    shared_data = re.search(
-        r"<script type=\"text/javascript\">window._sharedData = (.*);</script>", request["text"]).group(1)
-    data = json.loads(shared_data)
-    csrf_token = data["config"]["csrf_token"]
-    return csrf_token
-
-
 def fetch_queries_hash() -> util.Queries:
     """ Returns a ``Queries`` object which contains many key. These are about ``query_hash`` variable in GraphQL requests where each of them points to different endpoint. """
     request = util.http_get(IG_URL + "/account/login")
@@ -39,7 +29,7 @@ def fetch_queries_hash() -> util.Queries:
     return o
 
 
-def fetch_home_feed(query_id: str, profile_id: str, first: int = 12, after: str = None) -> dict:
+def fetch_user_posts(query_id: str, profile_id: str, first: int = 12, after: str = None) -> dict:
     """ Returns a JSON object which includes the first ``first`` posts after the ``after (or None)`` posts. """
     url = IG_URL + "/graphql/query/?query_hash=" + query_id + "&variables=" + \
         json.dumps(dict(id=profile_id, first=first,
@@ -50,10 +40,9 @@ def fetch_home_feed(query_id: str, profile_id: str, first: int = 12, after: str 
     return data
 
 
-def fetch_home_feed_properties_from(short_code: str, csrf_token: str) -> dict:
+def fetch_post_properties(short_code: str) -> dict:
     """ Returns a JSON object which includes all informations about a post from it's ``short_code``. """
-    request = util.http_get(IG_URL + "/p/" + short_code + "/?__a=1",
-                            headers=dict(cookie="csrftoken=" + csrf_token + ";"))
+    request = util.http_get(IG_URL + "/p/" + short_code + "/?__a=1")
     data = util.handle_json(request)
     return data
 
@@ -65,8 +54,8 @@ def fetch_user(username: str) -> dict:
     return data
 
 
-def fetch_user_feed(query_hash: str, user_id: str, csrf_token: str) -> dict:
-    """ Returns a JSON object which includes the highlights, reel, and some other, from a profile. """
+def fetch_user_stories(query_hash: str, user_id: str) -> dict:
+    """ Returns a JSON object which includes the highlight and the current (if exists) stories from a profile. """
     intents = dict(
         include_chaining=True,
         include_reel=True,
@@ -78,7 +67,7 @@ def fetch_user_feed(query_hash: str, user_id: str, csrf_token: str) -> dict:
     )
 
     response = util.perform_graphql(query_hash, dict(
-        user_id=user_id, **intents), csrf_token)
+        user_id=user_id, **intents))
     data = response["data"]
     feed = data["user"]
 

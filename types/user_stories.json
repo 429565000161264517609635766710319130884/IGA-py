@@ -1,0 +1,53 @@
+{
+  "data": {
+    "viewer": null,
+    "user": {
+      "has_public_story": false,
+      "is_live": false,
+      "reel": {
+        "__typename": "string",
+        "id": "string",
+        "expiring_at": 0,
+        "has_pride_media": false,
+        "latest_reel_media": null,
+        "seen": null,
+        "user": {
+          "id": "string",
+          "profile_pic_url": "string",
+          "username": "string"
+        },
+        "owner": {
+          "__typename": "string",
+          "id": "string",
+          "profile_pic_url": "string",
+          "username": "string"
+        }
+      },
+      "edge_chaining": { "edges": [] },
+      "edge_highlight_reels": {
+        "edges": [
+          {
+            "node": {
+              "__typename": "string",
+              "id": "string",
+              "cover_media": {
+                "thumbnail_src": "string"
+              },
+              "cover_media_cropped_thumbnail": {
+                "url": "string"
+              },
+              "owner": {
+                "__typename": "string",
+                "id": "string",
+                "profile_pic_url": "string",
+                "username": "string"
+              },
+              "title": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "status": "string"
+}
