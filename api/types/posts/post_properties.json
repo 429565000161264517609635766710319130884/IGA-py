@@ -125,7 +125,7 @@
         "is_unpublished": false,
         "requested_by_viewer": false,
         "pass_tiering_recommendation": false,
-        "edge_owner_to_timeline_media": { "count": 23 },
+        "edge_owner_to_timeline_media": { "count": 0 },
         "edge_followed_by": { "count": 0 }
       },
       "is_ad": false,
