@@ -1,10 +1,9 @@
 import json
 import re
 import urllib.parse
-import urllib3
+import urllib.request
 
 
-urllib3.disable_warnings()
 IG_URL = "https://www.instagram.com"
 MAGIC_USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1"
 
@@ -37,7 +36,7 @@ class LoginRedirectionError(Exception):
 
 
 def http_get(url: str, headers: dict = None):
-    http = urllib3.PoolManager()
+    http = urllib.request.Request(url)
     if not headers:
         headers = {"user-agent": MAGIC_USER_AGENT}
     else:
@@ -48,8 +47,11 @@ def http_get(url: str, headers: dict = None):
         if "user-agent" not in headers.keys():
             headers["user-agent"] = MAGIC_USER_AGENT
 
-    response = http.request("GET", url, headers=headers)
-    content = response.__dict__.get("_body")
+    for k, v in headers.items():
+        http.add_header(k, v)
+
+    response = urllib.request.urlopen(http)
+    content = response.read()
     text = content.decode("utf-8", "ignore")
 
     return dict(text=text, content=content)
