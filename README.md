@@ -13,7 +13,7 @@ chmod +x ./build.bash
 If you run the ``tests/tests.py`` script, you may see this result :
 
 ```bash
-username@host:~/isntagram_guest_api$ python3 tests/tests.py
+username@host:~/instagram_guest_api$ python3 tests/tests.py
 
 The github biography is 'Built for developers.'.
 It follows 177404 people and is followed by 12 people.
