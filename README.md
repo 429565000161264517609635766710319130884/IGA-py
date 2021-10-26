@@ -12,4 +12,11 @@ chmod +x ./build.bash
 # Example
 If you run the ``tests/tests.py`` script, you may see this result :
 
-<img src="./assets/example.png" alt="GitHub example">
+```bash
+username@host:~/isntagram_guest_api$ python3 tests/tests.py
+
+The github biography is 'Built for developers.'.
+It follows 177404 people and is followed by 12 people.
+Also, this account is a business one.
+Finally, this account is verified.
+```
