@@ -3,8 +3,8 @@ This API is unofficial. It allows you to interact with many things that your bro
 
 # Installation
 ```bash
-git clone https://github.com/quatrecentquatre-404/instagram-guest-api.git
-cd instagram-guest-api
+git clone https://github.com/quatrecentquatre-404/IGA-py.git
+cd IGA-py
 chmod +x ./build.bash
 ./build.bash
 ```
@@ -13,7 +13,7 @@ chmod +x ./build.bash
 If you run the ``tests/tests.py`` script, you may see this result :
 
 ```bash
-username@host:~/instagram_guest_api$ python3 tests/tests.py
+username@host:~/IGA-py$ python3 tests/tests.py
 
 The github biography is 'Built for developers.'.
 It follows 177404 people and is followed by 12 people.
