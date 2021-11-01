@@ -1,4 +1,4 @@
-# Instagram Guest API
+# Instagram Guest API (Python)
 This API is unofficial. It allows you to interact with many things that your browser displays such as likes, followers, biography, websites, comments, and more. The goal is to access these data without haivng to login.
 
 # Installation
@@ -7,6 +7,12 @@ git clone https://github.com/quatrecentquatre-404/IGA-py.git
 cd IGA-py
 chmod +x ./build.bash
 ./build.bash
+```
+
+# Import
+```python
+import IGA_py as Instagram
+# ...
 ```
 
 # Example
