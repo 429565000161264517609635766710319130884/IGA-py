@@ -1,0 +1,106 @@
+{
+  "data": {
+    "user": {
+      "edge_owner_to_timeline_media": {
+        "count": 0,
+        "page_info": {
+          "has_next_page": false,
+          "end_cursor": "string"
+        },
+        "edges": [
+          {
+            "node": {
+              "__typename": "string",
+              "id": "string",
+              "gating_info": null,
+              "fact_check_overall_rating": null,
+              "fact_check_information": null,
+              "media_overlay_info": null,
+              "sensitivity_friction_info": null,
+              "sharing_friction_info": {
+                "should_have_sharing_friction": false,
+                "bloks_app_url": null
+              },
+              "dimensions": {
+                "height": 0,
+                "width": 0
+              },
+              "display_url": "string",
+              "display_resources": [
+                {
+                  "src": "string",
+                  "config_width": 0,
+                  "config_height": 0
+                }
+              ],
+              "is_video": false,
+              "media_preview": "string",
+              "tracking_token": "string",
+              "has_upcoming_event": false,
+              "edge_media_to_tagged_user": {
+                "edges": []
+              },
+              "dash_info": {
+                "is_dash_eligible": false,
+                "video_dash_manifest": null,
+                "number_of_qualities": 0
+              },
+              "has_audio": false,
+              "video_url": "string",
+              "video_view_count": 0,
+              "edge_media_to_caption": {
+                "edges": [
+                  {
+                    "node": {
+                      "text": "string"
+                    }
+                  }
+                ]
+              },
+              "shortcode": "string",
+              "edge_media_to_comment": {
+                "count": 0,
+                "page_info": {
+                  "has_next_page": false,
+                  "end_cursor": "string"
+                }
+              },
+              "edge_media_to_sponsor_user": {
+                "edges": []
+              },
+              "is_affiliate": false,
+              "is_paid_partnership": false,
+              "comments_disabled": false,
+              "taken_at_timestamp": 0,
+              "edge_media_preview_like": {
+                "count": 0,
+                "edges": []
+              },
+              "owner": {
+                "id": "string",
+                "username": "string"
+              },
+              "location": null,
+              "viewer_has_liked": false,
+              "viewer_has_saved": false,
+              "viewer_has_saved_to_collection": false,
+              "viewer_in_photo_of_you": false,
+              "viewer_can_reshare": false,
+              "thumbnail_src": "string",
+              "thumbnail_resources": [
+                {
+                  "src": "string",
+                  "config_width": 0,
+                  "config_height": 0
+                }
+              ],
+              "coauthor_producers": [],
+              "product_type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "status": "string"
+}
