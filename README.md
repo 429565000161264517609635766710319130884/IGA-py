@@ -16,7 +16,7 @@ import IGA_py as Instagram
 ```
 
 # Example
-If you run the ``tests/tests.py`` script, you may see this result :
+If you run the ``tests.py`` script, you may see this result :
 
 ```bash
 username@host:~/IGA-py$ python3 tests/tests.py
